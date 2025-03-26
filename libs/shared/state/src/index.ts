@@ -1,2 +1,2 @@
 
-export * from './lib/router-feature/router.feature';
+export * from './lib/logic-router-feature/router.feature';

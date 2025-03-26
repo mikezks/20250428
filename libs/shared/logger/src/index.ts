@@ -1,2 +1,2 @@
 
-export * from './lib/cd-visualizer/cd-visualizer';
+export * from './lib/logic-cd-visualizer/cd-visualizer';

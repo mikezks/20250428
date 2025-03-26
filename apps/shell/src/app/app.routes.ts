@@ -14,15 +14,15 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'booking',
-    loadChildren: () => import('@flight-demo/booking')
+    loadChildren: () => import('@flight-demo/domain/booking')
   },
   {
     path: 'checkin',
-    loadChildren: () => import('@flight-demo/checkin')
+    loadChildren: () => import('@flight-demo/domain/checkin')
   },
   {
     path: 'boarding',
-    loadChildren: () => import('@flight-demo/boarding')
+    loadChildren: () => import('@flight-demo/domain/boarding')
   },
   {
     path: '**',
