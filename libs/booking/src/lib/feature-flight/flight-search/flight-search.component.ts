@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, inject, Injector, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
+import { SIGNAL } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 })
 export class FlightSearchComponent {
   private ticketsFacade = injectTicketsFacade();
+  private injector = inject(Injector);
 
   protected filter = signal({
     from: 'London',
@@ -33,10 +35,18 @@ export class FlightSearchComponent {
   protected flights$ = this.ticketsFacade.flights$;
 
   constructor() {
-    effect(() => console.log(this.route()));
+    // let activeConsumer = effect(() => console.log(this.route()));
+    const loggerEffectRef = effect(() => console.log(this.route()));
+    // loggerEffectRef.destroy();
+
+    console.log(this.route[SIGNAL]);
   }
 
   protected search(filter: FlightFilter): void {
+    effect(() => console.log(this.route()), {
+      injector: this.injector
+    });
+    
     this.filter.set(filter);
 
     if (!this.filter().from || !this.filter().to) {
