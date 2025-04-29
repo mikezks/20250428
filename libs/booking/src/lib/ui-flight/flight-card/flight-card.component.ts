@@ -1,5 +1,5 @@
 import { DatePipe, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, effect, input, model, output, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { injectCdBlink } from '@flight-demo/shared/logger';
 import { Flight } from '../../logic-flight';
@@ -53,6 +53,16 @@ export class FlightCardComponent {
   readonly item = input.required<Flight>();
   readonly selected = model(false);
   readonly delayTrigger = output<Flight>();
+
+  constructor() {
+    /* const ref = effect(() => {
+      console.log(this.item());
+      ref.destroy();
+    });
+    effect(
+      () => untracked(() => console.log(this.item()))
+    ); */
+  }
 
   toggleSelection(): void {
     this.selected.update(curr => !curr);
