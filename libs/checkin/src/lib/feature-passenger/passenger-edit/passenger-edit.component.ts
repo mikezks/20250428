@@ -4,7 +4,7 @@ import { Component, effect, inject, input, numberAttribute } from '@angular/core
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { validatePassengerStatus } from '../../util-validation';
-import { Passenger } from '../../logic-passenger';
+import { initialPassenger, Passenger } from '../../logic-passenger';
 
 
 @Component({
@@ -18,9 +18,14 @@ import { Passenger } from '../../logic-passenger';
 })
 export class PassengerEditComponent {
   id = input(0, { transform: numberAttribute });
-  passengerResource = httpResource<Passenger>(
-    () => `https://demo.angulararchitects.io/api/passenger?id=${ this.id() }`
-  );
+  passengerResource = httpResource<Passenger>(() => ({
+    url: 'https://demo.angulararchitects.io/api/passenger',
+    params: {
+      id: this.id()
+    }
+  }), {
+    defaultValue: initialPassenger
+  });
 
   protected editForm = inject(NonNullableFormBuilder).group({
     id: [0],
@@ -42,5 +47,9 @@ export class PassengerEditComponent {
 
   protected save(): void {
     console.log(this.editForm.value);
+    this.passengerResource.update(curr => ({
+      ...curr,
+      firstName: 'Sepp'
+    }));
   }
 }
