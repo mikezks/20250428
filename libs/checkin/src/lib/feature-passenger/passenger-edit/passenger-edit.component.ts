@@ -1,9 +1,10 @@
 import { NgIf } from '@angular/common';
+import { httpResource } from '@angular/common/http';
 import { Component, effect, inject, input, numberAttribute } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { PassengerService } from '../../logic-passenger/data-access/passenger.service';
 import { validatePassengerStatus } from '../../util-validation';
+import { Passenger } from '../../logic-passenger';
 
 
 @Component({
@@ -16,10 +17,10 @@ import { validatePassengerStatus } from '../../util-validation';
   templateUrl: './passenger-edit.component.html'
 })
 export class PassengerEditComponent {
-  private passengerService = inject(PassengerService);
-
   id = input(0, { transform: numberAttribute });
-  passengerResource = this.passengerService.findByIdAsResource(this.id);
+  passengerResource = httpResource<Passenger>(
+    () => `https://demo.angulararchitects.io/api/passenger?id=${ this.id() }`
+  );
 
   protected editForm = inject(NonNullableFormBuilder).group({
     id: [0],
