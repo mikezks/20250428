@@ -1,11 +1,12 @@
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { tapResponse } from '@ngrx/operators';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Flight } from '../model/flight';
 import { computed, inject } from '@angular/core';
-import { FlightFilter } from '../model/flight-filter';
+import { tapResponse } from '@ngrx/operators';
+import { patchState, signalStore, type, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { setAllEntities, withEntities } from '@ngrx/signals/entities';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { pipe, switchMap } from 'rxjs';
 import { FlightService } from '../data-access/flight.service';
-import { pipe, switchMap, tap } from 'rxjs';
+import { Flight } from '../model/flight';
+import { FlightFilter } from '../model/flight-filter';
 
 
 export const BookingStore = signalStore(
@@ -21,12 +22,12 @@ export const BookingStore = signalStore(
             3: true,
             5: true,
         } as Record<number, boolean>,
-        flights: [] as Flight[]
     }),
+    withEntities({ entity: type<Flight>(), collection: 'flight' }),
     // Selectors
     withComputed(store => ({
         delayedFlights: computed(
-            () => store.flights().filter(flight => flight.delayed)
+            () => store.flightEntities().filter(flight => flight.delayed)
         ),
     })),
     // Updaters
@@ -34,7 +35,7 @@ export const BookingStore = signalStore(
         setFilter: (filter: FlightFilter) =>
             patchState(store, { filter }),
         setFlights: (flights: Flight[]) =>
-            patchState(store, { flights }),
+            patchState(store, setAllEntities(flights, { collection: 'flight' })),
     })),
     // Effects
     withMethods((
