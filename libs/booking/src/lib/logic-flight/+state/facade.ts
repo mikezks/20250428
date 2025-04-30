@@ -10,10 +10,8 @@ export function injectTicketsFacade() {
   // bookingStore.delayedFlights
   return {
     flights: bookingStore.flights,
-    search: (filter: FlightFilter) => {
-      bookingStore.setFilter(filter);
-      bookingStore.load();
-    },      
+    search: (filter: FlightFilter) => 
+      bookingStore.setFilter(filter),
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     update: (flight: Flight) => {},
     reset: () => bookingStore.setFlights([])

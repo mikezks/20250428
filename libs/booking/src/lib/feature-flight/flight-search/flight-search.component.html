@@ -1,4 +1,4 @@
-@let flights = this.flights();
+@let flights = store.flights();
 
 <div class="card">
   <div class="card-header">
@@ -8,9 +8,9 @@
   <div class="card-body">
 
     <app-flight-filter
-      [filter]="filter()"
-      (searchTrigger)="search($event)"
-      >
+      [filter]="store.filter()"
+      (searchTrigger)="store.setFilter($event)"
+    >
       <div *ngIf="flights.length" class="flight-filter-info">
         {{ flights.length }} flights found!
       </div>
@@ -27,8 +27,7 @@
   <div *ngFor="let flight of flights" class="col-xs-12 col-sm-6 col-md-4">
     <app-flight-card
       [item]="flight"
-      [(selected)]="basket[flight.id]"
-      (delayTrigger)="delay($event)"
+      [selected]="store.basket()[flight.id]"
     />
   </div>
 </div>
@@ -39,6 +38,6 @@
   </div>
 
   <div class="card-body">
-    <pre>{{ basket | json }}</pre>
+    <pre>{{ store.basket() | json }}</pre>
   </div>
 </div>
